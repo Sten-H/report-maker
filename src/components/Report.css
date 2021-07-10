@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table caption {
+  text-align: left;
+}
+
+thead tr {
+  border-bottom: 1px solid #333;
+}
+
+th, td {
+  text-align: left;
+  padding: 0.4em;
+}
+
+.table-container {
+  overflow-x: auto;
+}

@@ -1,46 +1,25 @@
-# Getting Started with Create React App
+## Where to look
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The report creation code is under `src/lib/report`, reading the tests in `contract.test.ts` in `__tests__` folder could help in understanding how they're supposed to work.
 
-## Available Scripts
+## Thoughts
 
-In the project directory, you can run:
+### Approach
 
-### `yarn start`
+I couldn't really figure out if there was a set way that I should read the contract events. To me there were two options:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+* Read all events at once and construct a sort of history, them create the report after all events are read.
+* Since the events seem to be sorted by month I can read the events one month at a time and construct the report as I read the events.
+  * This assumes that a termination is only known (and read) the same date that it is terminated. That seems to align with what I see in the description, but it's a pretty **big assumption**.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+I chose the second way because it seems like that is the way the example reports are generated in that they don't have knowledge of future price changes when showing expected gross. This oculd be done with first alternative too but I'd have to add some kind of meta data of when a price change is known to the contract data I think.
 
-### `yarn test`
+Other than that I couldn't figure out the expected gross values of feb and mar in the case 1 output of the pdf. It looks incorrect to me, this probably means there's something I've misunderstood but can't figure out what that would be. To me the expected gross of feb should know that it shouldn't draw for the previous month of the contract that just started in feb, to me 2300 makes sense. I've got a feeling I'm going to feel plenty dumb about this.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Code style
 
-### `yarn build`
+I was a little afraid that the report generation could become slow due to the amount of events so I decided to sort of code a little old school (some would say) using for/while loops for early exits and mutating data as I go.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Other
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `yarn eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+Didn't really have time to make sure that the full case with price adjustments works properly. If I had time I would make some tests to compare against the pdf output of case 2.
